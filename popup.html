@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Speed Controller</title>
+  <style>
+    body {
+      width: 200px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+    h3 {
+      font-size: 16px;
+    }
+    button {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Playback Speed</h3>
+  <button id="decrease">-</button>
+  <button id="increase">+</button>
+
+  <script>
+    const decreaseButton = document.getElementById('decrease');
+    const increaseButton = document.getElementById('increase');
+
+    decreaseButton.addEventListener('click', () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript({
+          target: { tabId: tabs[0].id },
+          func: () => {
+            const video = document.querySelector('video');
+            if (video) {
+              video.playbackRate = Math.max(video.playbackRate - 0.25, 0.25);
+            }
+          }
+        });
+      });
+    });
+
+    increaseButton.addEventListener('click', () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript({
+          target: { tabId: tabs[0].id },
+          func: () => {
+            const video = document.querySelector('video');
+            if (video) {
+              video.playbackRate = Math.min(video.playbackRate + 0.25, 16);
+            }
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
